@@ -1,0 +1,101 @@
+{
+    "job_role": {
+        "job_id": "job_001",
+        "title": "Senior Python Developer",
+        "required_skills": [
+            "Python",
+            "FastAPI",
+            "REST API"
+        ],
+        "preferred_skills": [
+            "Docker",
+            "PostgreSQL",
+            "AWS"
+        ],
+        "min_experience": 3,
+        "education_required": "bachelors"
+    },
+    "candidates": [
+        {
+            "candidate_id": "cand_001",
+            "name": "Alice Johnson",
+            "skills": [
+                "Python",
+                "FastAPI",
+                "REST API",
+                "Docker",
+                "PostgreSQL"
+            ],
+            "experience_years": 5,
+            "education_level": "bachelors",
+            "certifications": [
+                "AWS Certified Developer"
+            ],
+            "employment_gaps": []
+        },
+        {
+            "candidate_id": "cand_002",
+            "name": "Bob Smith",
+            "skills": [
+                "Python",
+                "Django",
+                "REST API"
+            ],
+            "experience_years": 3.5,
+            "education_level": "bachelors",
+            "certifications": [],
+            "employment_gaps": [
+                {
+                    "months": 4,
+                    "reason_provided": true
+                }
+            ]
+        },
+        {
+            "candidate_id": "cand_003",
+            "name": "Carol Martinez",
+            "skills": [
+                "Python",
+                "FastAPI"
+            ],
+            "experience_years": 2,
+            "education_level": "bachelors",
+            "certifications": [],
+            "employment_gaps": []
+        },
+        {
+            "candidate_id": "cand_004",
+            "name": "David Lee",
+            "skills": [
+                "Python",
+                "FastAPI",
+                "REST API",
+                "AWS"
+            ],
+            "experience_years": 4,
+            "education_level": "masters",
+            "certifications": [
+                "AWS Certified Solutions Architect"
+            ],
+            "employment_gaps": [
+                {
+                    "months": 8,
+                    "reason_provided": false
+                }
+            ]
+        },
+        {
+            "candidate_id": "cand_005",
+            "name": "Eva Rodriguez",
+            "skills": [
+                "JavaScript",
+                "Node.js",
+                "React"
+            ],
+            "experience_years": 6,
+            "education_level": "bachelors",
+            "certifications": [],
+            "employment_gaps": []
+        }
+    ]
+}
