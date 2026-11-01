@@ -10,6 +10,7 @@ from models import (
 )
 from hrm_engine import HRMEngine
 from llm_service import LLMService
+from chat_handler import ChatHandler
 
 # Load environment variables
 load_dotenv()
@@ -20,10 +21,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS configuration for local development
+# CORS configuration - MUST be before routes
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Vite and CRA defaults
+    allow_origins=["http://localhost:5173"],  # Explicit origin for React app
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -37,6 +38,7 @@ if not GEMINI_API_KEY:
     print("WARNING: GEMINI_API_KEY not set in environment variables")
 
 llm_service = LLMService(api_key=GEMINI_API_KEY, model_name=GEMINI_MODEL) if GEMINI_API_KEY else None
+chat_handler = ChatHandler(llm_service) if llm_service else None
 
 
 @app.get("/")
@@ -110,6 +112,39 @@ async def parse_candidate(candidate_text: str, candidate_id: str):
         )
     
     return llm_service.parse_candidate(candidate_text, candidate_id)
+
+
+@app.get("/api/chat/start")
+async def start_chat():
+    """Start a new chat session"""
+    if not chat_handler:
+        raise HTTPException(
+            status_code=500,
+            detail="Chat service not configured. Please set GEMINI_API_KEY in .env file"
+        )
+    
+    return chat_handler.get_welcome_message()
+
+
+@app.post("/api/chat/message")
+async def send_message(request: dict):
+    """Send a message in the chat"""
+    if not chat_handler:
+        raise HTTPException(
+            status_code=500,
+            detail="Chat service not configured. Please set GEMINI_API_KEY in .env file"
+        )
+    
+    session_id = request.get("session_id", "")
+    message = request.get("message", "")
+    
+    if not message:
+        raise HTTPException(
+            status_code=400,
+            detail="Message cannot be empty"
+        )
+    
+    return chat_handler.handle_message(session_id, message)
 
 
 if __name__ == "__main__":

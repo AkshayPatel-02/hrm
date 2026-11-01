@@ -1,193 +1,180 @@
-# HRM Candidate Screening System
+# 🤖 HRM Candidate Screening Chatbot
 
-> **Explainable AI for Hiring**: Demonstrating why LLM-only screening is unreliable and how rule-based HRM ensures consistent, traceable decisions.
+An interactive AI-powered chatbot that screens candidates using a rule-based Hierarchical Reasoning Model (HRM) with natural language input.
 
-## 🎯 Problem Statement
+## ✨ Features
 
-Organizations increasingly rely on AI for candidate screening, but LLM-based decisions are **inconsistent**, **opaque**, and hard to justify, making them unreliable for high-impact hiring decisions.
-
-## 💡 What This MVP Demonstrates
-
-This is a **trust demo**, not an accuracy demo. It shows:
-
-1. ❌ **Why LLM-only screening is unreliable** - Same input may produce different outputs
-2. ✅ **How rule-based HRM enforces consistency** - Deterministic decisions every time  
-3. 📋 **How every decision can be traced and explained** - Full reasoning traces with named rules
-4. ⚖️ **How decisions can be defended** - Compliance with hiring policies
-
-## 🏗️ System Architecture
-
-```
-Web UI (React + Vite)
-   ↓
-FastAPI Backend
-   ↓
-Gemini LLM (parsing only)
-   ↓
-HRM Engine (3-layer decision system)
-   ↓
-Decision + Reasoning Trace
-```
-
-### HRM 3-Layer Architecture
-
-**Layer 1: Eligibility Gate** (Hard Filters)
-- R1_MIN_EXPERIENCE - Minimum years required
-- R2_MANDATORY_SKILLS - Required skills check
-- R3_EDUCATION_REQUIREMENT - Education level validation
-
-**Layer 2: Risk & Gap Evaluation**
-- R4_SKILL_GAP_THRESHOLD - Preferred skills coverage
-- R5_EMPLOYMENT_GAP - Gap analysis with explanations
-- R6_CERTIFICATION_MISSING - Certification requirements
-
-**Layer 3: Policy Decision**
-- R7_HIRE_POLICY - Low risk → Hire
-- R8_REVIEW_POLICY - Medium risk → Review
-- R9_REJECT_POLICY - High risk → Reject
+- 💬 **Conversational Interface** - Describe jobs and candidates in plain English
+- 📊 **Clean Results Table** - No raw JSON, just readable decisions
+- 🔍 **Explainable Decisions** - Every decision backed by transparent HRM rules
+- 🎯 **9-Layer Rule System** - Deterministic screening (R1-R9)
+- 🤝 **LLM + HRM** - Best of both: AI parsing + rule-based decisions
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- Python 3.8+
-- Node.js 16+
-- Google Gemini API Key ([Get one here](https://makersuite.google.com/app/apikey))
-
-### Backend Setup
+### 1. Start Backend
 
 ```bash
 cd backend
-
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# Mac/Linux:
-source venv/bin/activate
-
-# Install dependencies
 pip install -r requirements.txt
 
-# Configure environment
-copy .env.example .env
-# Edit .env and add your GEMINI_API_KEY
+# Add your Gemini API key to .env
+echo "GEMINI_API_KEY=your_key_here" > .env
 
-# Run server
-python main.py
+# Start server with auto-reload
+uvicorn main:app --reload --port 8000
 ```
 
-Backend will run at: http://localhost:8000
-
-### Frontend Setup
+### 2. Start Frontend
 
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Run development server
 npm run dev
 ```
 
-Frontend will run at: http://localhost:5173
+### 3. Use the Chatbot
 
-## 📊 Usage
+Open http://localhost:5173 and:
 
-1. **Upload Data**: Navigate to http://localhost:5173
-   - Click "Load Demo Data" for quick testing
-   - Or manually enter job role and candidates in JSON format
+1. **Describe the job**: "I need a Backend Engineer with 3+ years Python experience, FastAPI knowledge, and a Bachelor's degree"
 
-2. **View Results**: See all candidates with both decisions
-   - Green badge = HIRE
-   - Yellow badge = REVIEW
-   - Red badge = REJECT
+2. **Describe candidates**: "Alice has 5 years Python and FastAPI with a CS degree. Bob has 2 years Python only."
 
-3. **Compare Decisions**: Click any candidate to see:
-   - **Left Panel**: LLM-only decision (opaque, opinionated)
-   - **Right Panel**: HRM decision (structured, rule-based)
-   - Expand reasoning steps to see which rules triggered
+3. **View results** in a clean table with decisions and explanations!
 
-## 🎬 Demo Flow (< 2 minutes)
+## 🎯 How It Works
 
-1. Click "Load Demo Data" → "Screen Candidates"
-2. Observe 5 candidates with varying qualifications
-3. Click on a candidate where decisions differ
-4. Show the expandable reasoning trace
-5. Highlight how HRM is:
-   - ✅ Deterministic
-   - ✅ Explainable  
-   - ✅ Traceable
-   - ✅ Compliant
+```
+User Input (Natural Language)
+    ↓
+Gemini LLM (Parse & Structure)
+    ↓
+HRM Engine (Apply 9 Rules)
+    ↓
+Gemini LLM (Format Explanations)
+    ↓
+Clean Results Table
+```
 
-## 🔍 Sample Data
+### HRM Rules (R1-R9)
 
-The demo includes 5 candidates:
+**Layer 1 - Eligibility Gate:**
+- R1: Minimum experience check
+- R2: Mandatory skills validation
+- R3: Education requirement
 
-- **Alice Johnson**: Strong candidate (hire)
-- **Bob Smith**: Borderline with explained gap (review)
-- **Carol Martinez**: Below experience threshold (reject)
-- **David Lee**: Strong but unexplained gap (flagged)
-- **Eva Rodriguez**: Wrong skill set (reject)
+**Layer 2 - Risk Evaluation:**
+- R4: Skill gap assessment
+- R5: Employment gaps check
+- R6: Certification requirements
 
-## 🛡️ Key Differentiators
-
-| Feature | LLM-Only | LLM + HRM |
-|---------|----------|-----------|
-| Consistency | ❌ Variable | ✅ Deterministic |
-| Explainability | ❌ Opaque | ✅ Full trace |
-| Traceability | ❌ None | ✅ Named rules |
-| Compliance | ❌ Uncertain | ✅ Policy-enforced |
-| Auditability | ❌ Impossible | ✅ Complete |
+**Layer 3 - Policy Decision:**
+- R7: HIRE policy
+- R8: REVIEW policy
+- R9: REJECT policy
 
 ## 📁 Project Structure
 
 ```
 HRM/
 ├── backend/
-│   ├── main.py              # FastAPI application
-│   ├── models.py            # Data models
-│   ├── hrm_engine.py        # 3-layer HRM logic
-│   ├── llm_service.py       # Gemini integration
-│   └── requirements.txt     # Python dependencies
+│   ├── main.py              # FastAPI app with chat endpoints
+│   ├── chat_handler.py      # Conversation manager
+│   ├── hrm_engine.py        # 3-layer rule engine
+│   ├── llm_service.py       # Gemini API integration
+│   └── models.py            # Data schemas
 ├── frontend/
-│   ├── src/
-│   │   ├── screens/
-│   │   │   ├── UploadScreen.jsx
-│   │   │   ├── CandidateListScreen.jsx
-│   │   │   └── ComparisonScreen.jsx
-│   │   ├── components/
-│   │   │   └── Header.jsx
-│   │   ├── App.jsx
-│   │   └── index.css
-│   └── package.json
+│   └── src/
+│       └── screens/
+│           └── ChatInterface.jsx  # Main chatbot UI
 └── README.md
 ```
 
-## 🎓 Technical Highlights
+## 🎨 UI Preview
 
-- **Backend**: FastAPI with Pydantic validation
-- **LLM**: Google Gemini for structured extraction only
-- **HRM**: Pure Python rule engine (no ML)
-- **Frontend**: React 18 + Vite for fast development
-- **Design**: Clean, minimal, comparison-focused UI
+The chatbot shows:
+- **Chat messages** (user vs system)
+- **Results table** with color-coded decisions
+- **Detailed breakdowns** with expandable HRM traces
+- **Start new** button to reset and screen more candidates
 
-## 🚫 Out of Scope
+## 🔧 API Endpoints
 
-This MVP explicitly does NOT:
-- ❌ Predict the best candidate
-- ❌ Train ML models
-- ❌ Make bias predictions
-- ❌ Automate real hiring decisions
-- ❌ Optimize for accuracy metrics
+### `GET /api/chat/start`
+Start a new conversation session
+
+### `POST /api/chat/message`
+```json
+{
+  "session_id": "uuid",
+  "message": "User's natural language input"
+}
+```
+
+Returns formatted response with results when screening is complete.
+
+## 🎯 Example Conversation
+
+**System:**
+> 👋 Welcome! Please describe the job role you're hiring for.
+
+**You:**
+> Senior Python Developer, 3 years FastAPI, Bachelor's required
+
+**System:**
+> ✅ Got it! Position: Senior Python Developer
+> Required: Python, FastAPI
+> Min Experience: 3 years
+> 
+> Now describe your candidates.
+
+**You:**
+> Alice: 5 years Python+FastAPI, Bachelor's
+> Bob: 2 years Python only
+
+**System:**
+> 📊 Screening Complete!
+> 
+> | Name  | Decision | Reasoning |
+> |-------|----------|-----------|
+> | Alice | HIRE     | Strong match: exceeds requirements... |
+> | Bob   | REJECT   | Below minimum experience (R1)... |
+
+## 🔐 Environment Variables
+
+Create `backend/.env`:
+```
+GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODEL=gemini-1.5-flash
+```
+
+Get your API key from: https://makersuite.google.com/app/apikey
+
+## 🎯 Key Differentiators
+
+| Aspect | LLM-Only | LLM + HRM |
+|--------|----------|-----------|
+| Consistency | ❌ Variable | ✅ Deterministic |
+| Explainability | ❌ Opaque | ✅ Full trace |
+| Auditability | ❌ None | ✅ Complete |
+| User Experience | ❌ Technical | ✅ Friendly |
+
+## 🐛 Troubleshooting
+
+**CORS errors?**
+- Make sure backend is running on port 8000
+- Frontend on port 5173
+- Both servers must be running
+
+**No API key?**
+- Set `GEMINI_API_KEY` in `backend/.env`
+- Restart backend after adding key
+
+**Slow responses?**
+- LLM processing takes 15-20 seconds for 5 candidates
+- This is normal - you'll see a typing indicator
 
 ## 📝 License
 
-This is a hackathon demo project.
-
-## 🙏 Acknowledgments
-
-Built for demonstrating explainable AI in hiring decisions.
+Hackathon demo project - 2026

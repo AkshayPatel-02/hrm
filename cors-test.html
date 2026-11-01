@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Test</title>
+</head>
+<body>
+    <h1>CORS Test for HRM Backend</h1>
+    <button onclick="testCORS()">Test CORS</button>
+    <pre id="result"></pre>
+
+    <script>
+        async function testCORS() {
+            const resultEl = document.getElementById('result');
+            resultEl.textContent = 'Testing...';
+            
+            try {
+                // Test GET first
+                const getResponse = await fetch('http://localhost:8000/api/chat/start');
+                const getData = await getResponse.json();
+                resultEl.textContent += '\n✅ GET /api/chat/start works!\n';
+                resultEl.textContent += JSON.stringify(getData, null, 2);
+                
+                // Test POST
+                const postResponse = await fetch('http://localhost:8000/api/chat/message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        session_id: getData.session_id,
+                        message: 'test message'
+                    })
+                });
+                
+                const postData = await postResponse.json();
+                resultEl.textContent += '\n\n✅ POST /api/chat/message works!\n';
+                resultEl.textContent += JSON.stringify(postData, null, 2);
+                
+            } catch (error) {
+                resultEl.textContent += '\n\n❌ Error: ' + error.message;
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
